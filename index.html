@@ -87,12 +87,25 @@
         slot.classList.add('revealed');
         if (prize === '1등') {
           slot.style.backgroundColor = 'red';
+          slot.style.color = 'white';
         }
         if (prize === '2등') {
           slot.style.backgroundColor = 'orange';
         }
         if (prize === '3등') {
           slot.style.backgroundColor = 'yellow';
+        }
+        if (prize === '4등') {
+          slot.style.backgroundColor = 'green';
+          slot.style.color = 'white';
+        }
+        if (prize === '5등') {
+          slot.style.backgroundColor = 'gray';
+          slot.style.color = 'white';
+        }
+        if (prize === '6등') {
+          slot.style.backgroundColor = 'black';
+          slot.style.color = 'white';
         }
 
         const savedDraws = JSON.parse(localStorage.getItem('draws')) || [];
@@ -144,12 +157,25 @@
               slot.classList.add('revealed');
               if (prize === '1등') {
                 slot.style.backgroundColor = 'red';
+                slot.style.color = 'white';
               }
               if (prize === '2등') {
                 slot.style.backgroundColor = 'orange';
               }
               if (prize === '3등') {
                 slot.style.backgroundColor = 'yellow';
+              }
+              if (prize === '4등') {
+                slot.style.backgroundColor = 'green';
+                slot.style.color = 'white';
+              }
+              if (prize === '5등') {
+                slot.style.backgroundColor = 'gray';
+                slot.style.color = 'white';
+              }
+              if (prize === '6등') {
+                slot.style.backgroundColor = 'black';
+                slot.style.color = 'white';
               }
             } else {
               slot.textContent = '?';
