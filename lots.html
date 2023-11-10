@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>뽑기판</title>
+    <style>
+      .grid-container {
+        display: grid;
+        grid-template-columns: repeat(11, 1fr);
+        gap: 15px;
+        margin-top: 50px;
+      }
+      .grid-item {
+        width: 50px;
+        height: 50px;
+        background-color: #ddd;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+      }
+      #reset {
+        position: absolute;
+        top: 10px;
+        right: 50px;
+        width: 60px;
+        height: 30px;
+      }
+      nav {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+      .prize {
+        display: flex;
+        flex-direction: row;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <h1>행운의 뽑기판</h1>
+      <div class="prize">
+        <h2>1등 - 영화 쿠폰 1인패키지(1명)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h2>
+        <h2>2등 - 회비 1회 면제(1명)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h2>
+        <h2>3등 - 대즐 상품권 5천원(2명)</h2>
+      </div>
+      <div class="prize">
+        <h3>4등 - 빼빼로(4명)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>
+        <h3>5등 - 추억의 과자(40명)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>
+        <h3>6등 - 동아리방 과자 이용권(62명)</h3>
+      </div>
+      <button id="reset">초기화</button>
+    </nav>
+    <div class="grid-container"></div>
+
+    <script>
+      function initializePrizes() {
+        const prizes = [];
+        const prizeCounts = {
+          '1등': 1,
+          '2등': 1,
+          '3등': 2,
+          '4등': 4,
+          '5등': 40,
+          '6등': 62,
+        };
+        for (const [rank, count] of Object.entries(prizeCounts)) {
+          for (let i = 0; i < count; i++) {
+            prizes.push(rank);
+          }
+        }
+        return prizes;
+      }
+
+      function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+      }
+
+      function revealPrize(slot, prize, index) {
+        slot.textContent = prize;
+        slot.classList.add('revealed');
+        if (prize === '1등') {
+          slot.style.backgroundColor = 'red';
+        }
+
+        const savedDraws = JSON.parse(localStorage.getItem('draws')) || [];
+        savedDraws[index] = prize;
+        localStorage.setItem('draws', JSON.stringify(savedDraws));
+        const revealed = JSON.parse(localStorage.getItem('revealed')) || [];
+        revealed[index] = true;
+        localStorage.setItem('revealed', JSON.stringify(revealed));
+      }
+
+      function resetDraws() {
+        const prizes = initializePrizes();
+        const shuffledPrizes = shuffleArray(prizes);
+        const gridContainer = document.querySelector('.grid-container');
+        gridContainer.innerHTML = '';
+
+        shuffledPrizes.forEach((prize, index) => {
+          const slot = document.createElement('div');
+          slot.className = 'grid-item';
+          slot.id = `slot${index + 1}`;
+          slot.textContent = '?';
+          slot.addEventListener('click', function () {
+            if (!this.classList.contains('revealed')) {
+              revealPrize(this, prize, index);
+            }
+          });
+          gridContainer.appendChild(slot);
+        });
+
+        localStorage.setItem('draws', JSON.stringify(shuffledPrizes));
+        localStorage.setItem('revealed', JSON.stringify([]));
+      }
+
+      window.onload = function () {
+        const savedDraws = JSON.parse(localStorage.getItem('draws'));
+        const revealed = JSON.parse(localStorage.getItem('revealed')) || [];
+
+        const gridContainer = document.querySelector('.grid-container');
+        gridContainer.innerHTML = '';
+
+        if (savedDraws) {
+          savedDraws.forEach((prize, index) => {
+            const slot = document.createElement('div');
+            slot.className = 'grid-item';
+            slot.id = `slot${index + 1}`;
+
+            if (revealed[index]) {
+              slot.textContent = prize;
+              slot.classList.add('revealed');
+              if (prize === '1등') {
+                slot.style.backgroundColor = 'red';
+              }
+            } else {
+              slot.textContent = '?';
+            }
+
+            slot.addEventListener('click', function () {
+              if (!this.classList.contains('revealed')) {
+                revealPrize(this, prize, index);
+              }
+            });
+
+            gridContainer.appendChild(slot);
+          });
+        } else {
+          resetDraws();
+        }
+      };
+
+      document.getElementById('reset').addEventListener('click', resetDraws);
+    </script>
+  </body>
+</html>
