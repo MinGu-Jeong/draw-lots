@@ -88,6 +88,12 @@
         if (prize === '1등') {
           slot.style.backgroundColor = 'red';
         }
+        if (prize === '2등') {
+          slot.style.backgroundColor = 'orange';
+        }
+        if (prize === '3등') {
+          slot.style.backgroundColor = 'yellow';
+        }
 
         const savedDraws = JSON.parse(localStorage.getItem('draws')) || [];
         savedDraws[index] = prize;
@@ -138,6 +144,12 @@
               slot.classList.add('revealed');
               if (prize === '1등') {
                 slot.style.backgroundColor = 'red';
+              }
+              if (prize === '2등') {
+                slot.style.backgroundColor = 'orange';
+              }
+              if (prize === '3등') {
+                slot.style.backgroundColor = 'yellow';
               }
             } else {
               slot.textContent = '?';
